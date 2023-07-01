@@ -12,34 +12,19 @@ public class calc_app {
 		
 		final List<BankTransaction> bankTransactions = BankStatementCSVParser.parseLinesFromCSV(lines);
 		
-		/*
-		System.out.println("The path is " + path.toString());
-		System.out.println(bankTransactions.getClass());
-		*/
-		//System.out.println("The total for all transactions is " + calculateTotalAmount(bankTransactions));
-		System.out.println("Transactions in January " + calculateTotalInMonth(bankTransactions,	Month.FEBRUARY));
-
+		final BankStatementProcessor bankStatementProcessor = new BankStatementProcessor(bankTransactions);
+		
+		collectSummary(bankStatementProcessor);
 	}
 	
-	public static double calculateTotalInMonth(final List<BankTransaction> bankTransactions, final Month month) {
-		double total = 0;
-		for(final BankTransaction bankTransaction: bankTransactions) {
-			if(bankTransaction.getDate().getMonth() == month){
-				total += bankTransaction.getAmount();
-			}
-		}
-		return total;
-	}
-	
-	public static double calculateTotalForCategory(final List<BankTransaction> bankTransactions, final String category) {
-		double total = 0;
+	private static void collectSummary(final BankStatementProcessor bankStatementProcessor) {
 		
-		for(final BankTransaction bankTransaction: bankTransactions) {
-			if(bankTransaction.getDescription().equals(category)) {
-				total += bankTransaction.getAmount();
-			}
-		}
+		System.out.println("The total for all transactions is "	+ bankStatementProcessor.calculateTotalAmount());
 		
-		return total;
+		System.out.println("The total for transactions in January is " + bankStatementProcessor.calculateTotallnMonth(Month.JANUARY));
+			
+		System.out.println("The total for transactions in February is " + bankStatementProcessor.calculateTotallnMonth(Month.FEBRUARY));
+			
+		System.out.println("The total salary received is " 	+ bankStatementProcessor.calculateTotalForCategory("Salary"));
 	}
 }
